@@ -11,5 +11,10 @@ HD analytics challenge is mainly related to the **Curse of dimensionality**:
 * **_Model learning issue_**: as distance between observations increases with the dimensions, the sample size required for learning a model drastically increases.
   * Solutions: feature extraction and dimension reduction through low-dimensional learning.  
 
-## Functional Data
-Functional data can be defined as a fluctuating quantity or impulse whose variations represent information and is often represented as a function of time or space.
+## Functional Data Analysis
+Functional data can be defined as a fluctuating quantity or impulse whose variations represent information and is often represented as a function of time or space.  
+
+## Regression
+Suppose we have a collection of _i.i.d_ training data  
+
+$f(x) = x^2$
