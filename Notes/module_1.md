@@ -9,7 +9,7 @@ The initial definition of Big Data revolves around the three V's:
 High-Dimensional data can be defined as data set with a large number of attributes, such as images, videos, surveys, etc. Our main question is **_How we can extract useful information from these massive data sets?_**  
 HD analytics challenge is mainly related to the **Curse of dimensionality**:
 * **_Model learning issue_**: as distance between observations increases with the dimensions, the sample size required for learning a model drastically increases.
- * Solutions: feature extraction and dimension reduction through low-dimensional learning.  
+  * Solutions: feature extraction and dimension reduction through low-dimensional learning.  
 
 ## Functional Data
-Functional data can be defined as a fluctuating quantity or impulse whose variations represent information and is often represented as a function of time or space. 
+Functional data can be defined as a fluctuating quantity or impulse whose variations represent information and is often represented as a function of time or space.
