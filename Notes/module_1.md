@@ -43,7 +43,7 @@ Notice that the coefficients can be easily estimated using least squares linear 
 
 #### Disadvantages of Polynomial regression
 * Remote part of the function is very sensitive to outliers  
-![outliers](D:/Cursos/ISYE_8803/Notes/Images/poly_disadvantages.png)  
+![outliers](Images/poly_disadvantages.png)  
 * Limited flexibility due to its global functional structure. For example, if you use a cubic polynomial function you are assuming that the pattern of observed data follows a cubic form on the whole range of data.  
 A solution to these problems could be to move from global regression to local regression. Divide the range of x's that we have into segments and in each segment fit a local polynomial function. This can be formalized with the idea of **splines**.  
 
