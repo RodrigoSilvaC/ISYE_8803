@@ -152,4 +152,18 @@ The original knots, $\xi_i$, could be written as: $\tau_{M+j} = \xi_j$, $j = 1,.
 M of them after the lower bound: $\xi_{K+1} \leq \tau_{M+K+1} \leq \tau_{M+K+2} \leq \tau_{M+K+3} \leq ... \leq \tau_{2M+K} $  
 The actual values of these additional knots beyond the boundary are arbitrary, and it is customary to make them all the same and equal to the lower and upper bound, respectively.  
 2. Let $B_{j,m}(x)$ be the $j^{th}$ B-spline basis function of order m ($m\leq M$) for the knot sequence $\tau$. They are defined recursively in terms of divided differences as follows:
-![bspline_recursion](Images/b_spline_recursion.png)
+![bspline_recursion](Images/b_spline_recursion.png)  
+
+### Smoothing Splines  
+#### Boundary Effects on Splines  
+Suppose we have functional data coming from the equation  
+$y_i = f(x_i) + \epsilon_i$
+Where the residuals are normal with mean 0 and variance sigma squared.  
+The variance of the function can be estimated with the equation:  
+$Var(\hat{f}(x)) = h(x)^T(H^TH)^{-1}h(x)\sigma^2$  
+Here, **H** is the basis matrix and **h(x)^T** is the row corresponding to the row x in the **H** matrix.  
+If we plot the pointwise variance from a cubic spline with two knots, as shown below, we observe that the variance near the boundaries for cubic splines is much larger than the variance of the global polynomial. The reason behind this is that **the complexity of the cubic spline is more than the complexity of global polynomials due to the large number of parameters that the cubic spline has**.   
+![pointwise_variance](Images/pointwise_variance.png)  
+A more complex model reduce the estimation bias but increase the estimation variance. In order to reduce the variance of the model, one thing we can do is reduce the complexity of the splines by using linear splines rather than cubic splines. We can achieve this by using **natural splines**.  
+
+#### Natural Cubic Splines
