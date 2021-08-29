@@ -54,3 +54,84 @@ $a< \xi_1 < \xi_2 < ... < \xi_K < b $
 Where $\xi_0 = a$ and $\xi_{K+1} = b$  
 * We then fit a polynomial in each interval under the continuity conditions and combine them by the linear combination:   
 $f(X) = \sum_{m=1}^K\beta_mh_m(X)$  
+Where $h_m(X)$ is the _mth_ transformation of X.   
+
+#### Basis functions
+Polynomial regression models are a special case of a **basis function** approach. The idea is to have a family of functions or transformations that can be applied to a variable X, so instead of fitting a linear model we fit the model  
+$y_i = \beta_0 + \beta_1h_1(x_i) + \beta_2h_2(x_i) + ... + + \beta_Kh_K(x_i)$  
+
+#### Piecewise Polynomials
+A piecewise polynomial function $f(X)$ _is obtained by dividing the domain of $X$ into contiguous intervals, and representing f by a separate polynomial in each interval_.  
+
+#### Splines - Examples
+* **The piecewise constant spline** is a 0 _th_ degree polynomial defined as an indicator function,  
+$h_1(X) = I(X<\xi_1), h_2(X) = I(\xi_1\leq X < \xi_2), h_3(X) = I(\xi_2\leq X)$  
+We can define a local polynomial for each region, and then we can find the linear combination of those three functions to define a global function  
+$f(X) = \sum_{m=1}^K\beta_mh_m(X)$  
+In this case, the beta hat estimate will be equal to the average of points on each local region, as we can see on the image below:  
+![piecewise_constant](Images/piecewise_constant.png)  
+* **Piecewise linear spline** would be intercept plus slope. So in addition to the other functions we had, we add another three:  
+$h_{m+3}= h_m(X)X$, where $h_m(X)$ is still an indicator function.  
+![linear_spline](Images/linear_spline.png)  
+
+As we can see from both figures, there are two issues with the estimated functions: **discontinuity and underfitting**.
+
+#### Continuity
+To make sure that the function is continuous, we can impose some continuity constraints on each knot. For the previous example (piecewise linear spline), we have the following:  
+$f(x) = \sum_{m=1}^6\beta_mh_m(X)$  
+Here, m goes from 1 to six because we have in total 6 basis functions (the first three are the indicator functions, and the other three are $h_m(X)X$.  
+1. We have three regions. Our basis functions are:  
+$h_1(X) = I(X<\xi_1)$, $h_2(X) = I(\xi_1\leq X<\xi_2)$, $h_3(X) = I(\xi_2\leq X)$  
+2. The line that fits regions:  
+$X<\xi_1$ is: $y_1 = \beta_1h_1(X)+\beta_4h_1(X)X$  
+$\xi_1\leq X < \xi_2$ is: $y_2 = \beta_2h_2(X)+\beta_5h_2(X)X$
+$\xi_2\leq X $ is: $y_3 = \beta_3h_3(X)+\beta_6h_3(X)X$             
+3. We impose a continuity constraint for each knot:  
+$f(\xi_1^-) = f(\xi_1^+)$, which gives us: $\beta_1 + \xi_1\beta_4 = \beta_2+\xi_1\beta_5$  
+$f(\xi_2^-) = f(\xi_2^+)$, which gives us: $\beta_2+\xi_2\beta_5 = \beta_3+\xi_2\beta_6$
+
+Alternatively, we could incorporate the constraints into the basis functions:  
+$h_1(X) = 1$,$h_2(X) = X$, $h_3(X) = (X-\xi_1)_+$, $h_4(X) = (X-\xi_2)_+$  
+This is known as a **truncated power basis**. The value of this function is:  
+$h(x,\xi) = (x-\xi) = (x-\xi) $ if $x >\xi$ and 0 otherwise. This means that we basically truncate the negative side of the function, as we can see on the graph below.
+![piecewise_basis_function](Images/piecewise_basis.png)  
+
+The general function to define truncated power basis functions is:  
+$h_j(X) = X^{j-1}$, $j = 1,...,M$
+$h_{M+l}(X) = (X-\xi_l)_+^{j-1}$, $l = 1,...,K$  
+_The total degrees of freedom is K+M_
+
+#### Underfitting
+To fix the underfitting problem, we can use higher order of the local polynomial. The figure below shows a series of piecewise cubic polynomials fit to the same data, with increasing orders of continuity at the knots. The function in the lower right panel is continuous and has continuous first and second derivatives at the knots.  
+$f(\xi_j^-) = f(\xi_j^+)$  
+$f'(\xi_j^-) = f'(\xi_j^+)$
+$f''(\xi_j^-) = f''(\xi_j^+)$, $j = 1,...,K$  
+$h_1(X) = 1$,$h_2(X) = X$, $h_3(X) = X^2$, $h_4(X) = X^3$, $h_5(X) = (X-\xi_1)^3_+$, $h_6(X) = (X-\xi_2)^3_+$
+
+![piecewise_increasing_continuity](Images/piecewise_increasing_cont.png)
+
+Here, the degrees of freedom of the spline can be calculated by **(# of regions)(# of parameters in each region) - (# of knots)(# of constraints per knot)**. For the example, we have (3 regions)(4 parameters) - (2 knots)(3 constraints per knot) = 6 degrees of freedom.  
+
+### Order-M Splines  
+In general, we can define order-M splines, in which we use polynomials of order M-1.  
+
+| Order-M      | Type of polynomial |
+| -----------  | -----------        |
+| M = 1        | piecewise-constant splines|
+| M = 2        | linear splines               |
+| M = 3        | quadratic splines              |
+| M = 4        | cubic splines               |  
+
+### Estimation  
+After creating the basis functions, we can use OLS to estimate the parameters $\beta$.
+We define the matrix **H**, which has the basis functions on each of its columns and the number of rows equal to the number of observations:  
+H = $\large[$ $h_1(X)$	$h_2(X)$ $h_3(X)$	$h_4(X)$ $h_5(X)$	$h_6(X)$ $\large]$  
+* Using OLS we obtain the beta estimate equal to:  
+$\hat{\beta} = \large(H^TH\large)^{-1}H^Ty$  
+* **The linear Projection or Linear Smoother** is equal to:  
+$\hat{y} = H\hat{\beta} = H\large(H^TH\large)^{-1}H^Ty = Sy$  
+* The degrees of freedom (_df_) are equal to the _trace_ of _**S**_.  
+
+#### Pros and cons of truncated power basis functions  
+* Truncated power basis functions are simple and algebraically appealing
+* On the other hand, they are not efficient for computation and numerically unstable
