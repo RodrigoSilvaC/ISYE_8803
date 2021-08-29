@@ -112,7 +112,7 @@ $h_1(X) = 1$,$h_2(X) = X$, $h_3(X) = X^2$, $h_4(X) = X^3$, $h_5(X) = (X-\xi_1)^3
 
 Here, the degrees of freedom of the spline can be calculated by **(# of regions)(# of parameters in each region) - (# of knots)(# of constraints per knot)**. For the example, we have (3 regions)(4 parameters) - (2 knots)(3 constraints per knot) = 6 degrees of freedom.  
 
-### Order-M Splines  
+#### Order-M Splines  
 In general, we can define order-M splines, in which we use polynomials of order M-1.  
 
 | Order-M      | Type of polynomial |
@@ -122,7 +122,7 @@ In general, we can define order-M splines, in which we use polynomials of order 
 | M = 3        | quadratic splines              |
 | M = 4        | cubic splines               |  
 
-### Estimation  
+#### Estimation  
 After creating the basis functions, we can use OLS to estimate the parameters $\beta$.
 We define the matrix **H**, which has the basis functions on each of its columns and the number of rows equal to the number of observations:  
 H = $\large[$ $h_1(X)$	$h_2(X)$ $h_3(X)$	$h_4(X)$ $h_5(X)$	$h_6(X)$ $\large]$  
@@ -135,3 +135,21 @@ $\hat{y} = H\hat{\beta} = H\large(H^TH\large)^{-1}H^Ty = Sy$
 #### Pros and cons of truncated power basis functions  
 * Truncated power basis functions are simple and algebraically appealing
 * On the other hand, they are not efficient for computation and numerically unstable
+
+### B-Splines
+#### Computational issues of Splines
+As mentioned earlier, truncated power basis functions are simple and algebraically appealing. However, they are numerically unstable due to the high correlation of the basis vectors. For example, lets consider the truncated power basis of a cubic spline  
+$h_1(X) = 1$,$h_2(X) = X$, $h_3(X) = X^2$, $h_4(X) = X^3$, $h_5(X) = (X-\xi_1)^3_+$, $h_6(X) = (X-\xi_2)^3_+$  
+For a positive range of X, $X, X^2$, and $X^3$ are highly correlated. Therefore, **this makes the matrix $H^TH$ close to singular, which gives us a numerical instability in the matrix inversion and the determinant of $H^TH$ is close to 0.**.  
+![numerical_instability](Images/numerical_instability.png)  
+
+One possible solution for this problem is to use _B-splines_.  
+
+#### Steps to create B-splines basis vectors of order M with k knots
+1. Create two M augmented knots sequences, $\tau$.  
+M of them will be before the lower bound: $\tau_1 \leq \tau_2 \leq \tau_3 \leq ... \leq \tau_M \leq \xi_0$  
+The original knots, $\xi_i$, could be written as: $\tau_{M+j} = \xi_j$, $j = 1,...,K$
+M of them after the lower bound: $\xi_{K+1} \leq \tau_{M+K+1} \leq \tau_{M+K+2} \leq \tau_{M+K+3} \leq ... \leq \tau_{2M+K} $  
+The actual values of these additional knots beyond the boundary are arbitrary, and it is customary to make them all the same and equal to the lower and upper bound, respectively.  
+2. Let $B_{j,m}(x)$ be the $j^{th}$ B-spline basis function of order m ($m\leq M$) for the knot sequence $\tau$. They are defined recursively in terms of divided differences as follows:
+![bspline_recursion](Images/b_spline_recursion.png)
