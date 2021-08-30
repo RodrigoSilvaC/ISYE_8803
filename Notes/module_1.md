@@ -167,3 +167,21 @@ If we plot the pointwise variance from a cubic spline with two knots, as shown b
 A more complex model reduce the estimation bias but increase the estimation variance. In order to reduce the variance of the model, one thing we can do is reduce the complexity of the splines by using linear splines rather than cubic splines. We can achieve this by using **natural splines**.  
 
 #### Natural Cubic Splines
+With natural cubic splines **we use linear polynomials in the regions beyond the boundary knots, which are before the first knot and after the last knot. For other regions, we use regular cubic splines** as the ones used in normal cubic splines. This **reduces the prediction variance, but the price is that we get larger bias near the boundaries**.  
+* The degrees of freedom is K, the number of knots.
+* To form the basis matrix we can compute each basis function using the following set of equations:
+![Basis_eqns_smoothing](Images/smoothing_eqns.png)  
+  * The first and second columns of the basis matrix correspond to the linear term which is nonzero for the whole range of x. $N_1(x)$ is for the intercept and $N_2(x)$ is for the slope.  
+  * The remaining columns are determined by the cubic truncated powers. Here, we choose 0 beyond $\xi_1$ and $\xi_K$ which are the first and last knots. The reason is because we want to have linear relationship or linear polynomials beyond these two regions. That's why we don't use truncated power basis for these regions.  
+  * In R, the syntax to create the basis matrix is _B = ns(x,df,intercept)_  
+
+#### Smoothing splines
+* We know that one of the parameters that we want to determine in a spline regression is the number of knots. Here, **we discuss a method that avoids the knots selection problem by selecting the maximum number of knots, which is the same as the sample size we have.**  
+* However, there is one problem: we know that the maximum number of knots increase the number of local polynomials, which in turn increase the overall complexity of the model and therefore the prediction variance increases.  
+* One way to control the complexity of the estimated function is to use penalization. We can write a penalized least square in the form shown below:  
+![penalized_ls](Images/penalized_ls.png)  
+Where $f(x_i)$ is the function we want to estimate and it is a function with two continuous derivatives, and $f''(x)$ is the second derivative of this function.  
+  * In the minimization problem, the _first term_ **represent the estimation error**, which measures the closeness of the model to the data that we have, which is related to **bias**.
+  * The _second term_ **penalizes the curvature of the function**. We know that the minimum valur of $[f''(x)]^2$ is 0, and that is attained when the function is linear. So this term what is trying to do is to push the model to a linear form, which encourages less complexity, which is related to **variance**.  
+  * As we can see, we have a tradeoff between bias and variance.  
+  * Lambda is an important factor, because  
