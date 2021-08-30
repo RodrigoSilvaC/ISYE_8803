@@ -184,4 +184,5 @@ Where $f(x_i)$ is the function we want to estimate and it is a function with two
   * In the minimization problem, the _first term_ **represent the estimation error**, which measures the closeness of the model to the data that we have, which is related to **bias**.
   * The _second term_ **penalizes the curvature of the function**. We know that the minimum valur of $[f''(x)]^2$ is 0, and that is attained when the function is linear. So this term what is trying to do is to push the model to a linear form, which encourages less complexity, which is related to **variance**.  
   * As we can see, we have a tradeoff between bias and variance.  
-  * Lambda is an important factor, because  
+  * Lambda is an important factor, because it is a weight of the penalty term, also known as the **smoothing parameter**. It controls the tradeoff between bias and variance. If we **increase** lambda, we will get a **less complex model**, therefore smaller variance. On the other hand, if we **decrease** lambda, we will get **smaller variance, but higher bias**.
+  * Extreme cases of lambda: if lambda is 0, we will be interpolating the data, overfitting it. If lambda is infinity, the second term enforces the model to be linear, and therefore it becomes the linear least squares model. 
