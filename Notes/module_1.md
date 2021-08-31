@@ -185,4 +185,24 @@ Where $f(x_i)$ is the function we want to estimate and it is a function with two
   * The _second term_ **penalizes the curvature of the function**. We know that the minimum valur of $[f''(x)]^2$ is 0, and that is attained when the function is linear. So this term what is trying to do is to push the model to a linear form, which encourages less complexity, which is related to **variance**.  
   * As we can see, we have a tradeoff between bias and variance.  
   * Lambda is an important factor, because it is a weight of the penalty term, also known as the **smoothing parameter**. It controls the tradeoff between bias and variance. If we **increase** lambda, we will get a **less complex model**, therefore smaller variance. On the other hand, if we **decrease** lambda, we will get **smaller variance, but higher bias**.
-  * Extreme cases of lambda: if lambda is 0, we will be interpolating the data, overfitting it. If lambda is infinity, the second term enforces the model to be linear, and therefore it becomes the linear least squares model. 
+  * **Extreme cases of lambda**: if lambda is 0, we will be interpolating the data, overfitting it. If lambda is infinity, the second term enforces the model to be linear, and therefore it becomes the linear least squares model.
+* It can be shown that the function that minimizes the optimization problem is a linear combination of natural cubic splines. This means that $\hat{f}(x)$ can be estimated by the summation of $\theta_j$ by the basis vector $N_j(x)$.  
+![minimizer](Images/minimizer.png)  
+* Substituting the formula shown above for $f(x_i)$, we get the following optimization problem in matrix form:  
+![solution](Images/solution.png)  
+
+#### Smoother matrix
+Similar to b-spline, the smoother spline estimator is a linear smoother.  
+$\hat{f} = N(N^TN+\lambda\Omega)^{-1}N^Ty$  
+$=S_{\lambda}y$  
+
+* $S_{\lambda}$ is the smoother matrix  
+* $S_{\lambda}$ is NOT idempotent  
+* $S_{\lambda}$ is symmetric  
+* $S_{\lambda}$ is positive definite  
+![positive_def](Images/positive_def.png)
+* The degrees of freedom are equal to the trace of $S_{\lambda}$  
+
+#### Choice of Tuning Parameter
+The choice of a tuning parameter is very important. It can be chosen by an independent validation data set.
+![tuning_parameter](Images/tuning_parameter.png)
