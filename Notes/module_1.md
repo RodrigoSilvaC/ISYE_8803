@@ -205,4 +205,10 @@ $=S_{\lambda}y$
 
 #### Choice of Tuning Parameter
 The choice of a tuning parameter is very important. It can be chosen by an independent validation data set.
-![tuning_parameter](Images/tuning_parameter.png)
+![tuning_parameter](Images/tuning_parameter.png)  
+
+##### K-fold cross validation (CV)  
+![k_fold_cv](Images/k_fold_cv.png)  
+
+##### Model selection criteria
+![model_selection](Images/model_selection.png)
